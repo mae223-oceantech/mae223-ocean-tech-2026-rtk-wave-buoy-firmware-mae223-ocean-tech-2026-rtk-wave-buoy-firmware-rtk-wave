@@ -99,10 +99,16 @@ If the config file does not exist, the OLA will create one with defaults on firs
 
 ## Step 3 — Power up and verify
 
+The OLA and ESP32 share a LiPo battery through a Y cable. Power-up order matters — follow this sequence exactly:
+
 1. Insert the SD card into the OLA
-2. Connect the Qwiic cable between ZED-F9P and OLA
-3. Wire the ESP32 UART2 to ZED-F9P UART1 as above
-4. Power the system (OLA via LiPo or USB, ESP32 via USB)
+2. Confirm all wiring is complete (Qwiic, UART jumpers, shared GND)
+3. Connect the battery's **first output to the OLA** — this also powers the ZED-F9P over Qwiic
+4. Wait a few seconds for the OLA and ZED-F9P to finish booting
+5. Connect the battery's **second output to the ESP32**
+6. Last, connect your **computer to the ESP32 via USB-C** to monitor serial output
+
+> **Do not connect USB-C to the OLA or ZED-F9P.** Both boards are powered entirely through the battery Y cable. A USB-C connection on either board can interfere with power sequencing and cause a brownout when the ZED-F9P starts up.
 
 Open a serial terminal on the OLA port at **115200 baud**. You should see:
 
@@ -150,6 +156,10 @@ RTK Fixed epochs will show `carrier_solution = 2` and horizontal accuracy of 1�
 ---
 
 ## Troubleshooting
+
+**System doesn't come up reliably / OLA or ZED-F9P appears to reset on ESP32 power-on**
+- Follow the power-up sequence in Step 3 exactly — connect OLA first, ESP32 second
+- Do not connect USB-C to the OLA or ZED-F9P while on battery power
 
 **OLA shows "GNSS offline"**
 - Check the Qwiic cable at both ends
